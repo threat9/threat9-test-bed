@@ -8,9 +8,9 @@ $ pip install git+https://github.com/threat9/threat9-test-bed.git
 ## Test utilities
 
 ### `HttpServiceMock`
-`HttpServiceMock` is a `flask` application that allows adding `unittests.mock` 
-as view functions. This gives us ability to setup dummy http services 
-on demand for testing purposes.
+`HttpServiceMock` is a `flask` application that allows for  adding 
+`unittests.mock`  as view functions. This gives us ability to setup dummy 
+http services on demand for testing purposes.
 
 ```python
 from threat9_test_bed.service_mocks import HttpServiceMock
