@@ -1,4 +1,6 @@
 .idea
+*/_version.py
+
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json

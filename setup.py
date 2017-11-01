@@ -1,17 +1,19 @@
-import codecs
 from pathlib import Path
 
 from setuptools import find_packages, setup
 
-HERE = Path.cwd()
+HERE = Path(__file__).parent.resolve()
 
 
-with codecs.open(str(HERE / "README.md"), encoding="utf-8") as f:
+with open(str(HERE / "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
     name='threat9-test-bed',
-    use_scm_version=True,
+    use_scm_version={
+        "root": str(HERE),
+        "write_to": str(HERE / "threat9_test_bed" / "_version.py"),
+    },
     url='http://threat9.com',
     author='Mariusz Kupidura',
     author_email='f4wkes@gmail.com',
@@ -24,13 +26,20 @@ setup(
             "test-bed = threat9_test_bed.cli:cli",
         ],
     },
+    setup_requires=[
+        "setuptools_scm",
+    ],
     install_requires=[
         "click",
         "flask",
         "pyopenssl",
-        "setuptools_scm",
     ],
-    extras_require={},
+    extras_require={
+        "tests": [
+            "flake8",
+            "isort",
+        ]
+    },
     classifiers=[
         "Operating System :: POSIX",
         "Intended Audience :: Developers",
