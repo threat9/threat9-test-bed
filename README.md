@@ -70,16 +70,16 @@ $ test-bed http
 #### `http` scenarios
 |Scenario 	        |   Behavior    |
 |-------------------|---------------|
-|`empty_response`   |   returns empty response with `200` status code                       |
-|`trash`            |   returns 100 characters long gibberish with `200` status code        |
-|`not_found`        |   returns `404` status code                                           |
-|`found`            |   returns _OK_ with `200` status code                                 |
-|`redirect`         |   redirects you with `302` status code                                |
-|`timeout`          |   sleep the server for 1 hour which effectively times out the request |
-|`error`            |   returns `500` status code                                           |
+|`EMPTY_RESPONSE`   |   returns empty response with `200` status code                       |
+|`TRASH`            |   returns 100 characters long gibberish with `200` status code        |
+|`NOT_FOUND`        |   returns `404` status code                                           |
+|`FOUND`            |   returns _OK_ with `200` status code                                 |
+|`REDIRECT`         |   redirects you with `302` status code                                |
+|`TIMEOUT`          |   sleep the server for 1 hour which effectively times out the request |
+|`ERROR`            |   returns `500` status code                                           |                                          |
 
 ```bash
-$ test-bed http --scenario trash
+$ test-bed http --scenario TRASH
 ```
 
 ### `https`
@@ -90,16 +90,16 @@ $ test-bed https
 #### `https` scenarios
 |Scenario 	        |   Behavior    |
 |-------------------|---------------|
-|`empty_response`   |   returns empty response with `200` status code                       |
-|`trash`            |   returns 100 characters long gibberish with `200` status code        |
-|`not_found`        |   returns `404` status code                                           |
-|`found`            |   returns _OK_ with `200` status code                                 |
-|`redirect`         |   redirects you with `302` status code                                |
-|`timeout`          |   sleep the server for 1 hour which effectively times out the request |
-|`error`            |   returns `500` status code                                           |
+|`EMPTY_RESPONSE`   |   returns empty response with `200` status code                       |
+|`TRASH`            |   returns 100 characters long gibberish with `200` status code        |
+|`NOT_FOUND`        |   returns `404` status code                                           |
+|`FOUND`            |   returns _OK_ with `200` status code                                 |
+|`REDIRECT`         |   redirects you with `302` status code                                |
+|`TIMEOUT`          |   sleep the server for 1 hour which effectively times out the request |
+|`ERROR`            |   returns `500` status code                                           |
 
 ```bash
-$ test-bed https --scenario found
+$ test-bed https --scenario FOUND
 ```
 
 ## Troubleshooting
@@ -108,7 +108,7 @@ $ test-bed https --scenario found
 Running services on it's default port may need extra privileges thus 
 prepending command with `sudo` should do the trick e.g.
 ```bash
-$ sudo test-bed https --scenario trash --port 443
+$ sudo test-bed https --scenario TRASH --port 443
 [2017-09-16 12:51:18,137: INFO/werkzeug]  * Running on https://127.0.0.1:443/ (Press CTRL+C to quit)
 ```
 This solution can be applied to other services and it's default ports as well.

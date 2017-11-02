@@ -4,6 +4,8 @@ import time
 
 from flask import Flask, abort, redirect
 
+from .scenarios import HttpScenario
+
 logger = logging.getLogger(__name__)
 
 http_server = Flask(__name__)
@@ -21,8 +23,10 @@ ALLOWED_METHODS = [
 @http_server.route('/', defaults={'path': ''}, methods=ALLOWED_METHODS)
 @http_server.route('/<path:path>', methods=ALLOWED_METHODS)
 def catch_all(path):
-    scenario_handler = HTTP_SCENARIOS.get(http_server.config["SCENARIO"],
-                                          error)
+    scenario_handler = SCENARIO_TO_HANDLER_MAP.get(
+        http_server.config["SCENARIO"],
+        error,
+    )
     logger.debug(
         f"Executing '{scenario_handler.__name__}' scenario handler..."
     )
@@ -57,12 +61,12 @@ def error():
     abort(500)
 
 
-HTTP_SCENARIOS = {
-    "empty_response": empty_response,
-    "trash": trash,
-    "not_found": not_found,
-    "found": found,
-    "redirect": redirect_,
-    "timeout": timeout,
-    "error": error,
+SCENARIO_TO_HANDLER_MAP = {
+    HttpScenario.EMPTY_RESPONSE: empty_response,
+    HttpScenario.TRASH: trash,
+    HttpScenario.NOT_FOUND: not_found,
+    HttpScenario.FOUND: found,
+    HttpScenario.REDIRECT: redirect_,
+    HttpScenario.TIMEOUT: timeout,
+    HttpScenario.ERROR: error,
 }
