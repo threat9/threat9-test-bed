@@ -4,8 +4,9 @@ import time
 
 from flask import Flask, abort, redirect
 
-http_server = Flask(__name__)
 logger = logging.getLogger(__name__)
+
+http_server = Flask(__name__)
 
 ALLOWED_METHODS = [
     "GET",
@@ -49,7 +50,7 @@ def redirect_():
 
 
 def timeout():
-    time.sleep(60*60)
+    time.sleep(60 * 60)
 
 
 def error():

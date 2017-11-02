@@ -1,7 +1,8 @@
 import logging
 
 import click
-from threat9_test_bed.http_server import http_server, HTTP_SCENARIOS
+
+from .http_server import HTTP_SCENARIOS, http_server
 
 logger = logging.getLogger(__name__)
 
