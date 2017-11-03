@@ -61,6 +61,30 @@ def test_exploit(target):
     cgi_mock.assert_called_once()
     assert check_mock.call_count == 2
 ```
+### `HttpScenarioService`
+`HttpScenarioService` allows for creating test utilities using pre-defined
+[scenarios](#http-scenarios)
+```python
+import pytest
+
+from threat9_test_bed.scenarios import HttpScenario
+from threat9_test_bed.service_mocks import HttpScenarioService
+
+
+@pytest.fixture(scope="session")
+def empty_target():
+    with HttpScenarioService("127.0.0.1", 8081,
+                             HttpScenario.EMPTY_RESPONSE) as http_service:
+        yield http_service
+
+
+@pytest.fixture(scope="session")
+def trash_target():
+    with HttpScenarioService("127.0.0.1", 8082,
+                             HttpScenario.TRASH) as http_service:
+        yield http_service
+
+```
 
 ## Services
 ### `http`
