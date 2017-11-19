@@ -32,6 +32,7 @@ setup(
     install_requires=[
         "click",
         "flask",
+        "gunicorn",
         "pyopenssl",
     ],
     extras_require={
