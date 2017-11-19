@@ -2,7 +2,8 @@ import logging
 
 import click
 
-from .http_server import http_server
+from .app import app
+from .gunicorn_server import GunicornServer
 from .scenarios import HttpScenario
 
 logger = logging.getLogger(__name__)
@@ -24,10 +25,16 @@ def cli():
               help='HTTP server behaviour.')
 def run_http_server(scenario, port):
     logger.debug("Starting `http` server...")
-    http_server.config.update(
+    app.config.update(
         SCENARIO=HttpScenario[scenario],
     )
-    http_server.run(port=port)
+    GunicornServer(
+        app=app,
+        bind=f"127.0.0.1:{port}",
+        worker_class="gthread",
+        threads=8,
+        accesslog="-",
+    ).run()
     logger.debug(f"`http` server has been started on port {port}.")
 
 
@@ -42,8 +49,15 @@ def run_http_server(scenario, port):
               help='HTTP server behaviour.')
 def run_https_server(scenario, port):
     logger.debug("Starting `https` server...")
-    http_server.config.update(
+    app.config.update(
         SCENARIO=HttpScenario[scenario],
     )
-    http_server.run(port=port, ssl_context='adhoc')
+    GunicornServer(
+        app=app,
+        bind=f"127.0.0.1:{port}",
+        worker_class="gthread",
+        threads=8,
+        ssl=True,
+        accesslog="-",
+    ).run()
     logger.debug(f"`https` server has been started on port {port}.")

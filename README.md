@@ -61,6 +61,15 @@ def test_exploit(target):
     cgi_mock.assert_called_once()
     assert check_mock.call_count == 2
 ```
+#### Random port 
+To avoid `port` collison during tests you can tell `HttpServiceMock` to set 
+it for you by passing `0`
+```python
+@pytest.fixture(scope="session")
+def trash_target():
+    with HttpServiceMock("127.0.0.1", 0) as http_service:
+        yield http_service
+```
 ### `HttpScenarioService`
 `HttpScenarioService` allows for creating test utilities using pre-defined
 [scenarios](#http-scenarios)
@@ -84,6 +93,29 @@ def trash_target():
                              HttpScenario.TRASH) as http_service:
         yield http_service
 
+```
+
+#### Adhoc SSL support
+You can serve `HttpScenarioService` using adhoc SSL certificate by setting
+`ssl` keyword argument to `True`:
+
+```python
+@pytest.fixture(scope="session")
+def trash_target():
+    with HttpScenarioService("127.0.0.1", 8443, HttpScenario.TRASH, 
+                             ssl=True) as http_service:
+        yield http_service
+```
+
+#### Random port 
+To avoid `port` collison during tests you can tell `HttpScenarioService` to set 
+it for you by passing `0`
+```python
+@pytest.fixture(scope="session")
+def trash_target():
+    with HttpScenarioService("127.0.0.1", 0, 
+                             HttpScenario.TRASH) as http_service:
+        yield http_service
 ```
 
 ## Services

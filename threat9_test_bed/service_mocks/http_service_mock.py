@@ -3,12 +3,12 @@ from unittest import mock
 
 from flask import Flask
 
-from .base_http_service import BaseHttpService
+from .base_http_service import WSGIRefBasedHttpService
 
 logger = logging.getLogger(__name__)
 
 
-class HttpServiceMock(BaseHttpService):
+class HttpServiceMock(WSGIRefBasedHttpService):
     def __init__(self, host: str, port: int):
         super().__init__(host, port, Flask("target"))
 

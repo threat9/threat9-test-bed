@@ -8,7 +8,7 @@ from .scenarios import HttpScenario
 
 logger = logging.getLogger(__name__)
 
-http_server = Flask(__name__)
+app = Flask(__name__)
 
 ALLOWED_METHODS = [
     "GET",
@@ -20,11 +20,11 @@ ALLOWED_METHODS = [
 ]
 
 
-@http_server.route('/', defaults={'path': ''}, methods=ALLOWED_METHODS)
-@http_server.route('/<path:path>', methods=ALLOWED_METHODS)
+@app.route('/', defaults={'path': ''}, methods=ALLOWED_METHODS)
+@app.route('/<path:path>', methods=ALLOWED_METHODS)
 def catch_all(path):
     scenario_handler = SCENARIO_TO_HANDLER_MAP.get(
-        http_server.config["SCENARIO"],
+        app.config["SCENARIO"],
         error,
     )
     logger.debug(
