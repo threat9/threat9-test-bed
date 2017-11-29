@@ -14,3 +14,15 @@ class HttpScenario(Enum):
     @staticmethod
     def names():
         return [element.name for element in HttpScenario]
+
+
+@unique
+class TelnetScenario(Enum):
+    GENERIC = "generic"
+    AUTHORIZED = "authorized"
+    NOT_AUTHORIZED = "not_authorized"
+    TIMEOUT = "timeout"
+
+    @staticmethod
+    def names():
+        return [element.name for element in TelnetScenario]

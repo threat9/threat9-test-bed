@@ -1,12 +1,21 @@
 import logging
-import os
 import time
 
-from flask import Flask, abort, redirect
+from faker import Faker
+from flask import Flask, abort, g, redirect
 
-from .scenarios import HttpScenario
+from ..scenarios import HttpScenario
 
 logger = logging.getLogger(__name__)
+
+
+def get_faker():
+    faker = g.get('faker', None)
+    if faker is None:
+        faker = Faker()
+        g.user = faker
+    return faker
+
 
 app = Flask(__name__)
 
@@ -38,7 +47,7 @@ def empty_response():
 
 
 def trash():
-    return os.urandom(100), 200
+    return get_faker().paragraph(variable_nb_sentences=True), 200
 
 
 def not_found():

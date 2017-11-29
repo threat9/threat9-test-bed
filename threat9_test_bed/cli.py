@@ -2,9 +2,11 @@ import logging
 
 import click
 
-from .app import app
-from .gunicorn_server import GunicornServer
-from .scenarios import HttpScenario
+from .http_service.app import app
+from .http_service.gunicorn_server import GunicornServer
+from .scenarios import HttpScenario, TelnetScenario
+from .telnet_service.protocol import TelnetServerClientProtocol
+from .telnet_service.telnet_server import TelnetServer
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +63,22 @@ def run_https_server(scenario, port):
         accesslog="-",
     ).run()
     logger.debug(f"`https` server has been started on port {port}.")
+
+
+@cli.command('telnet')
+@click.option('--port',
+              default=8023,
+              show_default=True,
+              help="Telnet server port.")
+@click.option('--scenario',
+              required=True,
+              type=click.Choice(TelnetScenario.names()),
+              help='Telnet server behaviour.')
+def run_telnet_server(scenario, port):
+    logger.debug("Starting `telnet` server...")
+    TelnetServer(
+        host="127.0.0.1",
+        port=port,
+        protocol=lambda: TelnetServerClientProtocol(TelnetScenario[scenario]),
+    ).run()
+    logger.debug(f"`telnet` server has been started on port {port}.")

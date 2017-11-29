@@ -61,15 +61,6 @@ def test_exploit(target):
     cgi_mock.assert_called_once()
     assert check_mock.call_count == 2
 ```
-#### Random port 
-To avoid `port` collison during tests you can tell `HttpServiceMock` to set 
-it for you by passing `0`
-```python
-@pytest.fixture(scope="session")
-def trash_target():
-    with HttpServiceMock("127.0.0.1", 0) as http_service:
-        yield http_service
-```
 ### `HttpScenarioService`
 `HttpScenarioService` allows for creating test utilities using pre-defined
 [scenarios](#http-scenarios)
@@ -107,13 +98,54 @@ def trash_target():
         yield http_service
 ```
 
-#### Random port 
-To avoid `port` collison during tests you can tell `HttpScenarioService` to set 
+### `TelnetServiceMock`
+`TelnetServiceMock` allows for creating test utilities using pre-defined
+[scenarios](#telnet-scenarios) as well as attaching `unittests.mock`
+as command handlers. This gives us ability to setup dummy telnet service
+on demand for testing purposes.
+```python
+from telnetlib import Telnet
+
+import pytest
+
+from threat9_test_bed.service_mocks.telnet_service_mock import TelnetServiceMock
+from threat9_test_bed.scenarios import TelnetScenarios
+
+
+@pytest.fixture
+def generic_target():
+    with TelnetServiceMock("127.0.0.1", 8023,
+                           TelnetScenarios.AUTHORIZED) as telnet_service:
+        yield telnet_service
+
+
+def test_telnet(generic_target):
+    command_mock = target.get_command_mock("scoobeedoobeedoo")
+    command_mock.return_value = "Where are you?"
+
+    tn = Telnet(target.host, target.port, timeout=5)
+    tn.expect([b"Login: ", b"login: "], 5)
+    tn.write(b"admin" + b"\r\n")
+
+    tn.expect([b"Password: ", b"password"], 5)
+    tn.write(b"admin" + b"\r\n")
+
+    tn.expect([b"admin@target:~$"], 5)
+    tn.write(b"scoobeedoobeedoo" + b"\r\n")
+    _, match_object, _ = tn.expect([b"Where are you?"], 5)
+
+    tn.close()
+
+    assert match_object
+```
+
+### Random port
+To avoid `port` collison during tests you can tell test utilities to set
 it for you by passing `0`
 ```python
 @pytest.fixture(scope="session")
 def trash_target():
-    with HttpScenarioService("127.0.0.1", 0, 
+    with HttpScenarioService("127.0.0.1", 0,
                              HttpScenario.TRASH) as http_service:
         yield http_service
 ```
@@ -156,6 +188,24 @@ $ test-bed https
 
 ```bash
 $ test-bed https --scenario FOUND
+```
+
+### `telnet`
+After successful authorization elnet service responds with random
+_Lorem ipsum..._ for every command
+```bash
+$ test-bed telnet
+```
+#### `telnet` scenarios
+|Scenario 	        |   Behavior    |
+|-------------------|---------------|
+|`AUTHORIZED`       |   Any authorization attempt ends with success         |
+|`NOT_AUTHORIZED`   |   Every authorization attempt ends with failure       |
+|`GENERIC`          |   Authorization using `admin/admin` credentials       |
+|`TIMEOUT`          |   Server hangs as soon as client has been connected   |
+
+```bash
+$ test-bed telnet --scenario GENERIC
 ```
 
 ## Troubleshooting
