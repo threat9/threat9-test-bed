@@ -89,6 +89,7 @@ class WerkzeugBasedHttpService(BaseService):
 
         self.server_thread = threading.Thread(
             target=self.app.run,
+            args=(self.host, self.port),
             kwargs={"ssl_context": "adhoc"} if ssl else None
         )
 
