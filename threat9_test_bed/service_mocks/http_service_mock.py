@@ -3,14 +3,14 @@ from unittest import mock
 
 from flask import Flask
 
-from .base_http_service import WSGIRefBasedHttpService
+from .base_http_service import WerkzeugBasedHttpService
 
 logger = logging.getLogger(__name__)
 
 
-class HttpServiceMock(WSGIRefBasedHttpService):
-    def __init__(self, host: str, port: int):
-        super().__init__(host, port, Flask("target"))
+class HttpServiceMock(WerkzeugBasedHttpService):
+    def __init__(self, host: str, port: int, ssl=False):
+        super().__init__(host, port, Flask("target"), ssl)
 
     def get_route_mock(self, rule, **options):
         mocked_view = mock.MagicMock(name=rule, spec=lambda: None)

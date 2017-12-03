@@ -35,6 +35,7 @@ setup(
         "flask",
         "gunicorn",
         "pyopenssl",
+        "requests",
     ],
     extras_require={
         "tests": [

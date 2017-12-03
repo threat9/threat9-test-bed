@@ -61,6 +61,19 @@ def test_exploit(target):
     cgi_mock.assert_called_once()
     assert check_mock.call_count == 2
 ```
+#### Adhoc SSL support
+You can serve `HttpScenarioService` using adhoc SSL certificate by setting
+`ssl` keyword argument to `True`:
+
+```python
+from threat9_test_bed.service_mocks import HttpServiceMock
+
+@pytest.fixture
+def trash_target():
+    with HttpServiceMock("127.0.0.1", 0, ssl=True) as http_service:
+        yield http_service
+```
+
 ### `HttpScenarioService`
 `HttpScenarioService` allows for creating test utilities using pre-defined
 [scenarios](#http-scenarios)
@@ -91,6 +104,8 @@ You can serve `HttpScenarioService` using adhoc SSL certificate by setting
 `ssl` keyword argument to `True`:
 
 ```python
+from threat9_test_bed.service_mocks import HttpScenarioService
+
 @pytest.fixture(scope="session")
 def trash_target():
     with HttpScenarioService("127.0.0.1", 8443, HttpScenario.TRASH, 
