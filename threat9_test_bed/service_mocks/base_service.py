@@ -1,21 +1,14 @@
 import logging
 import socket
 import time
-from contextlib import closing
 
 logger = logging.getLogger(__name__)
-
-
-def find_free_port():
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
-        s.bind(('', 0))
-        return int(s.getsockname()[1])
 
 
 class BaseService:
     def __init__(self, host: str, port: int):
         self.host = host
-        self.port = find_free_port() if port == 0 else port
+        self.port, self.dibbed_port_socket = self.dib_port(port)
 
     def _wait_for_service(self):
         elapsed_time = 0
@@ -25,7 +18,8 @@ class BaseService:
             s.settimeout(1)
             try:
                 s.connect((self.host, self.port))
-            except (ConnectionRefusedError, ConnectionAbortedError):
+            except (ConnectionRefusedError, ConnectionAbortedError,
+                    socket.timeout):
                 elapsed_time = time.time() - start_time
                 s.close()
             else:
@@ -43,6 +37,7 @@ class BaseService:
 
     def __enter__(self):
         logger.debug(f"Starting {self}...")
+        self.dibbed_port_socket.close()
         self.start()
         self._wait_for_service()
         logger.debug(f"{self} has been started.")
@@ -52,6 +47,12 @@ class BaseService:
         logger.debug(f"Terminating {self}...")
         self.teardown()
         logger.debug(f"{self} has been terminated.")
+
+    @staticmethod
+    def dib_port(port=0) -> (int, socket.socket):
+        socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket_.bind(('', port))
+        return int(socket_.getsockname()[1]), socket_
 
     def __repr__(self):
         return (
