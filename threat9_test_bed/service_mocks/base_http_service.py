@@ -76,6 +76,7 @@ class WerkzeugBasedHttpService(BaseService):
     def __init__(self, host: str, port: int, app: Flask, ssl=False):
         super().__init__(host, port)
         self.app = app
+        self.dibbed_port_socket.close()  # werkzeug binds port on server init
         self.server = werkzeug_make_server(
             self.host, self.port, self.app,
             threaded=True,
