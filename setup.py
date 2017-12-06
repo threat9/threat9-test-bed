@@ -9,14 +9,14 @@ with open(str(HERE / "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name='threat9-test-bed',
+    name="threat9-test-bed",
     use_scm_version={
         "root": str(HERE),
         "write_to": str(HERE / "threat9_test_bed" / "_version.py"),
     },
-    url='http://threat9.com',
-    author='Mariusz Kupidura',
-    author_email='f4wkes@gmail.com',
+    url="http://threat9.com",
+    author="Mariusz Kupidura",
+    author_email="f4wkes@gmail.com",
     description="Threat9 Test Bed",
     long_description=long_description,
     packages=find_packages(where=str(HERE)),

@@ -73,14 +73,14 @@ class TelnetServerClientProtocol(asyncio.Protocol):
         if self.scenario == TelnetScenario.TIMEOUT:
             time.sleep(60 * 60)
 
-        self.remote_address = transport.get_extra_info('peername')
+        self.remote_address = transport.get_extra_info("peername")
         self.transport = transport
         self.transport.write(b"Login: ")
         logger.debug(f"Connection from {self.remote_address}")
 
     @authorized
     def data_received(self, data: bytes):
-        logger.debug(f'{self.remote_address} send: {data}')
+        logger.debug(f"{self.remote_address} send: {data}")
         command = data.decode().strip()
         handler = self._command_mocks.get(
             command, lambda: faker.paragraph(variable_nb_sentences=True)

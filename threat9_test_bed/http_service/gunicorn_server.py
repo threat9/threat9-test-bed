@@ -35,9 +35,9 @@ class GunicornServer(BaseApplication):
 
         if not cert_path.exists() or not pkey_path.exists():
             cert, pkey = generate_adhoc_ssl_pair()
-            with open(cert_path, 'wb') as f:
+            with open(cert_path, "wb") as f:
                 f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
-            with open(pkey_path, 'wb') as f:
+            with open(pkey_path, "wb") as f:
                 f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))
 
         return cert_path, pkey_path

@@ -16,15 +16,15 @@ def cli():
     pass
 
 
-@cli.command('http')
-@click.option('--port',
+@cli.command("http")
+@click.option("--port",
               default=8080,
               show_default=True,
               help="HTTP server port.")
-@click.option('--scenario',
+@click.option("--scenario",
               required=True,
               type=click.Choice(HttpScenario.names()),
-              help='HTTP server behaviour.')
+              help="HTTP server behaviour.")
 def run_http_server(scenario, port):
     logger.debug("Starting `http` server...")
     app.config.update(
@@ -40,15 +40,15 @@ def run_http_server(scenario, port):
     logger.debug(f"`http` server has been started on port {port}.")
 
 
-@cli.command('https')
-@click.option('--port',
+@cli.command("https")
+@click.option("--port",
               default=8443,
               show_default=True,
               help="HTTPS server port.")
-@click.option('--scenario',
+@click.option("--scenario",
               required=True,
               type=click.Choice(HttpScenario.names()),
-              help='HTTP server behaviour.')
+              help="HTTP server behaviour.")
 def run_https_server(scenario, port):
     logger.debug("Starting `https` server...")
     app.config.update(
@@ -65,15 +65,15 @@ def run_https_server(scenario, port):
     logger.debug(f"`https` server has been started on port {port}.")
 
 
-@cli.command('telnet')
-@click.option('--port',
+@cli.command("telnet")
+@click.option("--port",
               default=8023,
               show_default=True,
               help="Telnet server port.")
-@click.option('--scenario',
+@click.option("--scenario",
               required=True,
               type=click.Choice(TelnetScenario.names()),
-              help='Telnet server behaviour.')
+              help="Telnet server behaviour.")
 def run_telnet_server(scenario, port):
     logger.debug("Starting `telnet` server...")
     TelnetServer(

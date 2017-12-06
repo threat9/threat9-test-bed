@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_faker():
-    faker = g.get('faker', None)
+    faker = g.get("faker", None)
     if faker is None:
         faker = Faker()
         g.user = faker
@@ -29,8 +29,8 @@ ALLOWED_METHODS = [
 ]
 
 
-@app.route('/', defaults={'path': ''}, methods=ALLOWED_METHODS)
-@app.route('/<path:path>', methods=ALLOWED_METHODS)
+@app.route("/", defaults={"path": ""}, methods=ALLOWED_METHODS)
+@app.route("/<path:path>", methods=ALLOWED_METHODS)
 def catch_all(path):
     scenario_handler = SCENARIO_TO_HANDLER_MAP.get(
         app.config["SCENARIO"],
