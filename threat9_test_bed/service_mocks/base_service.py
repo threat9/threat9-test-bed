@@ -51,6 +51,7 @@ class BaseService:
     @staticmethod
     def dib_port(port=0) -> (int, socket.socket):
         socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         socket_.bind(('', port))
         return int(socket_.getsockname()[1]), socket_
 
