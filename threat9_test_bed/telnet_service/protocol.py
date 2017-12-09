@@ -53,15 +53,17 @@ class TelnetServerClientProtocol(asyncio.Protocol):
 
         self._command_mocks = {}
 
-        if self.scenario == TelnetScenario.NOT_AUTHORIZED:
+        if self.scenario is TelnetScenario.NOT_AUTHORIZED:
             self.creds = ()
-        elif self.scenario == TelnetScenario.AUTHORIZED:
+        elif self.scenario is TelnetScenario.AUTHORIZED:
             self.creds = GreedyTuple()
-        elif self.scenario == TelnetScenario.GENERIC:
+        elif self.scenario is TelnetScenario.GENERIC:
             self.creds = (
                 ("admin", "admin"),
                 ("kocia", "dupa"),
             )
+        elif self.scenario is TelnetScenario.TIMEOUT:
+            time.sleep(60 * 60)
         else:
             raise ValueError("You have to pass valid login scenario!")
 
@@ -70,13 +72,10 @@ class TelnetServerClientProtocol(asyncio.Protocol):
         return f"{self.login}@target:~$ "
 
     def connection_made(self, transport: asyncio.Transport):
-        if self.scenario == TelnetScenario.TIMEOUT:
-            time.sleep(60 * 60)
-
         self.remote_address = transport.get_extra_info("peername")
+        logger.debug(f"Connection from {self.remote_address}")
         self.transport = transport
         self.transport.write(b"Login: ")
-        logger.debug(f"Connection from {self.remote_address}")
 
     @authorized
     def data_received(self, data: bytes):

@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 class TelnetServer:
     def __init__(self, host: str, port: int, protocol):
-        asyncio.set_event_loop(asyncio.new_event_loop())
         self.loop = asyncio.get_event_loop()
 
         coro = self.loop.create_server(protocol, host, port)
@@ -18,7 +17,6 @@ class TelnetServer:
             self.loop.run_forever()
         except KeyboardInterrupt:
             pass
-
-        self.server.close()
-        self.loop.run_until_complete(self.server.wait_closed())
-        self.loop.close()
+        finally:
+            self.server.close()
+            self.loop.run_until_complete(self.server.wait_closed())

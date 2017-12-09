@@ -1,6 +1,5 @@
 import logging
 import threading
-import typing
 from unittest import mock
 
 from ..scenarios import TelnetScenario
@@ -28,10 +27,10 @@ class TelnetServiceMock(BaseService):
         self.server_thread.start()
 
     def teardown(self):
-        self.server.loop.stop()
+        self.server.loop.call_soon_threadsafe(self.server.loop.stop)
         self.server_thread.join()
 
-    def get_command_mock(self, command: str, handler: typing.Callable):
-        command_mock = mock.Mock(name=command)
-        self.protocol.add_command_handler(command, handler)
+    def get_command_mock(self, command: str):
+        command_mock = mock.MagicMock(name=command)
+        self.protocol.add_command_handler(command, command_mock)
         return command_mock
