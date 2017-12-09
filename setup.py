@@ -41,6 +41,8 @@ setup(
         "tests": [
             "flake8",
             "isort",
+            "pytest",
+            "unify",
         ]
     },
     classifiers=[

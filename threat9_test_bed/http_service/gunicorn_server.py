@@ -1,8 +1,8 @@
-import tempfile
 from pathlib import Path
+import tempfile
 
-from gunicorn.app.base import BaseApplication
 from OpenSSL import crypto
+from gunicorn.app.base import BaseApplication
 from werkzeug.serving import generate_adhoc_ssl_pair
 
 
