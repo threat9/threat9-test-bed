@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import time
 import typing
 
 from faker import Faker
@@ -36,7 +35,7 @@ def authorized(func):
     return _wrapper
 
 
-class GreedyTuple(tuple):
+class GreedyList(list):
     def __contains__(self, item):
         return True
 
@@ -52,20 +51,19 @@ class TelnetServerClientProtocol(asyncio.Protocol):
         self.authorized = False
 
         self._command_mocks = {}
+        self._creds = [
+            ("admin", "admin"),
+            ("kocia", "dupa"),
+        ]
 
+    @property
+    def creds(self):
         if self.scenario is TelnetScenario.NOT_AUTHORIZED:
-            self.creds = ()
+            return []
         elif self.scenario is TelnetScenario.AUTHORIZED:
-            self.creds = GreedyTuple()
+            return GreedyList()
         elif self.scenario is TelnetScenario.GENERIC:
-            self.creds = (
-                ("admin", "admin"),
-                ("kocia", "dupa"),
-            )
-        elif self.scenario is TelnetScenario.TIMEOUT:
-            time.sleep(60 * 60)
-        else:
-            raise ValueError("You have to pass valid login scenario!")
+            return self._creds
 
     @property
     def prompt(self):
@@ -90,3 +88,6 @@ class TelnetServerClientProtocol(asyncio.Protocol):
 
     def add_command_handler(self, command: str, handler: typing.Callable):
         self._command_mocks[command] = handler
+
+    def add_credentials(self, login: str, password: str):
+        self._creds.append((login, password))

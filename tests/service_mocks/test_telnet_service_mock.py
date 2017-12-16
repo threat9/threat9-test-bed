@@ -45,7 +45,7 @@ def test_telnet_service_mock_generic():
         tn.expect([b"Password: ", b"password"], 1.0)
         tn.write(b"admin" + b"\r\n")
 
-        tn.expect([b"admin@target:~$"], 1.0)
+        tn.expect([b"admin@target:~\$"], 1.0)
         tn.write(b"foo" + b"\r\n")
         _, match_object, _ = tn.expect([b"bar"], 1.0)
         assert match_object
@@ -70,8 +70,42 @@ def test_telnet_service_mock_authorized():
         tn.expect([b"Password: ", b"password"], 1.0)
         tn.write(password + b"\r\n")
 
-        tn.expect([login + b"@target:~$"], 1.0)
+        tn.expect([login + b"@target:~\$"], 1.0)
         tn.write(b"foo" + b"\r\n")
         _, match_object, _ = tn.expect([b"bar"], 1.0)
         assert match_object
+        tn.close()
+
+
+def test_telnet_service_mock_add_credentials():
+    with TelnetServiceMock("127.0.0.1", 8023,
+                           scenario=TelnetScenario.GENERIC) as target:
+        login = uuid.uuid4().hex.encode()
+        password = uuid.uuid4().hex.encode()
+
+        assert target.host == "127.0.0.1"
+        assert target.port == 8023
+
+        tn = Telnet(target.host, target.port, timeout=1.0)
+
+        tn.expect([b"Login: ", b"login: "], 1.0)
+        tn.write(login + b"\r\n")
+
+        tn.expect([b"Password: ", b"password"], 1.0)
+        tn.write(password + b"\r\n")
+
+        _, match_object, _ = tn.expect([b"Login incorrect"], 1.0)
+        assert match_object
+
+        target.add_credentials(login.decode(), password.decode())
+
+        tn.expect([b"Login: ", b"login: "], 1.0)
+        tn.write(login + b"\r\n")
+
+        tn.expect([b"Password: ", b"password"], 1.0)
+        tn.write(password + b"\r\n")
+
+        _, match_object, foo = tn.expect([login + b"@target:~\$"], 1.0)
+
+        assert match_object, foo.decode()
         tn.close()

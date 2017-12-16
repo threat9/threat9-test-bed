@@ -34,3 +34,6 @@ class TelnetServiceMock(BaseService):
         command_mock = mock.MagicMock(name=command)
         self.protocol.add_command_handler(command, command_mock)
         return command_mock
+
+    def add_credentials(self, login: str, password: str):
+        self.protocol.add_credentials(login, password)
