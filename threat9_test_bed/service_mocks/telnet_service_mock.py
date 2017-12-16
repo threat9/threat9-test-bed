@@ -36,4 +36,9 @@ class TelnetServiceMock(BaseService):
         return command_mock
 
     def add_credentials(self, login: str, password: str):
+        """ Add custom credentials pair. """
         self.protocol.add_credentials(login, password)
+
+    def add_banner(self, banner: bytes):
+        """ Add welcoming banner after connection. """
+        self.protocol.add_banner(banner)

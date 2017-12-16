@@ -50,6 +50,7 @@ class TelnetServerClientProtocol(asyncio.Protocol):
         self.password = None
         self.authorized = False
 
+        self.banner = b""
         self._command_mocks = {}
         self._creds = [
             ("admin", "admin"),
@@ -73,6 +74,8 @@ class TelnetServerClientProtocol(asyncio.Protocol):
         self.remote_address = transport.get_extra_info("peername")
         logger.debug(f"Connection from {self.remote_address}")
         self.transport = transport
+        if self.banner:
+            self.transport.write(self.banner + b"\r\n")
         self.transport.write(b"Login: ")
 
     @authorized
@@ -91,3 +94,6 @@ class TelnetServerClientProtocol(asyncio.Protocol):
 
     def add_credentials(self, login: str, password: str):
         self._creds.append((login, password))
+
+    def add_banner(self, banner: bytes):
+        self.banner = banner

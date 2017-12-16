@@ -109,3 +109,22 @@ def test_telnet_service_mock_add_credentials():
 
         assert match_object, foo.decode()
         tn.close()
+
+
+def test_telnet_service_mock_add_banner():
+    with TelnetServiceMock("127.0.0.1", 8023,
+                           scenario=TelnetScenario.GENERIC) as target:
+        banner = b"Scoobeedoobeedoo where are you?"
+        target.add_banner(banner)
+
+        assert target.host == "127.0.0.1"
+        assert target.port == 8023
+
+        tn = Telnet(target.host, target.port, timeout=1.0)
+
+        _, match_object, _ = tn.expect([banner], 1.0)
+        assert match_object
+
+        _, match_object, foo = tn.expect([b"Login: ", b"login: "], 1.0)
+        assert match_object, foo.decode()
+        tn.close()
