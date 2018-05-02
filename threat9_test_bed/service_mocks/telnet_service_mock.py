@@ -5,7 +5,7 @@ from unittest import mock
 from ..scenarios import TelnetScenario
 from ..telnet_service.protocol import TelnetServerClientProtocol
 from ..telnet_service.telnet_server import TelnetServer
-from .base_http_service import BaseService
+from .base_service import BaseService
 
 logger = logging.getLogger(__name__)
 
