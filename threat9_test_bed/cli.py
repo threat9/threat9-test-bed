@@ -3,8 +3,8 @@ import logging
 import click
 
 from .http_service.app import app
-from .http_service.gunicorn_server import GunicornServer
 from .scenarios import HttpScenario, TelnetScenario
+from .service_mocks.http_service_mock import WerkzeugBasedHttpService
 from .telnet_service.protocol import TelnetServerClientProtocol
 from .telnet_service.telnet_server import TelnetServer
 
@@ -30,13 +30,11 @@ def run_http_server(scenario, port):
     app.config.update(
         SCENARIO=HttpScenario[scenario],
     )
-    GunicornServer(
+    WerkzeugBasedHttpService(
         app=app,
-        bind=f"127.0.0.1:{port}",
-        worker_class="gthread",
-        threads=8,
-        accesslog="-",
-    ).run()
+        host=f"127.0.0.1",
+        port=port,
+    ).start()
     logger.debug(f"`http` server has been started on port {port}.")
 
 
@@ -54,14 +52,12 @@ def run_https_server(scenario, port):
     app.config.update(
         SCENARIO=HttpScenario[scenario],
     )
-    GunicornServer(
+    WerkzeugBasedHttpService(
         app=app,
-        bind=f"127.0.0.1:{port}",
-        worker_class="gthread",
-        threads=8,
+        host=f"127.0.0.1",
+        port=port,
         ssl=True,
-        accesslog="-",
-    ).run()
+    ).start()
     logger.debug(f"`https` server has been started on port {port}.")
 
 
