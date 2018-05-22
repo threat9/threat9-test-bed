@@ -2,7 +2,7 @@ version: 2
 jobs:
   lint:
     docker:
-      image: circleci/python:3.6
+      - image: circleci/python:3.6
     steps:
       - checkout
       - restore_cache:
@@ -22,6 +22,8 @@ jobs:
             isort --check-only --diff
             unify --check-only --quote \" -r .
   test:
+    docker:
+      - image: circleci/python:3.6
     steps:
       - checkout
       - restore_cache:
