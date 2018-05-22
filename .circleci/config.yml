@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - run:
-        command: python -m site
+          command: python -m site
       - restore_cache:
           keys:
             - pip-deps-{{ checksum "setup.py" }}
