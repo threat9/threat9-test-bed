@@ -17,6 +17,7 @@ jobs:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
             - /usr/local/lib/python3.6/site-packages
+            - /root/.local/lib/python3.6/site-packages
       - run:
           name: Lint
           command: |
