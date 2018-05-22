@@ -5,6 +5,8 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
+      - run:
+        command: python -m site
       - restore_cache:
           keys:
             - pip-deps-{{ checksum "setup.py" }}
