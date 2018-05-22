@@ -43,7 +43,6 @@ setup(
             "isort",
             "pytest",
             "unify",
-            "black",
         ]
     },
     classifiers=[

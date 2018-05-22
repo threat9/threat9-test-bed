@@ -41,7 +41,7 @@ jobs:
             - /usr/local/lib/python3.6/site-packages
       - run:
           name: Run tests
-          command: python -m py.test -vv tests/
+          command: python -m pytest -vv tests/
 
 workflows:
   version: 2
