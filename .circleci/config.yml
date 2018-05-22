@@ -5,18 +5,16 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run:
-          command: python -m site
       - restore_cache:
           keys:
-            - pip-deps-{{ checksum "setup.py" }}
+            - pip-deps-${CACHE_VERSION}-{{ checksum "setup.py" }}
       - run:
           name: Install dependencies
           command: pip install .[tests]
       - save_cache:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
-            - /usr/local/lib/python3.6/site-packages
+#            - /usr/local/lib/python3.6/site-packages
             - /root/.local/lib/python3.6/site-packages
       - run:
           name: Lint
@@ -36,9 +34,9 @@ jobs:
           name: Install dependencies
           command: pip install .[tests]
       - save_cache:
-          key: pip-deps-{{ checksum "setup.py" }}
+          key: pip-deps-${CACHE_VERSION}-{{ checksum "setup.py" }}
           paths:
-            - /usr/local/lib/python3.6/site-packages
+            - /root/.local/lib/python3.6/site-packages
       - run:
           name: Run tests
           command: python -m pytest -vv tests/
