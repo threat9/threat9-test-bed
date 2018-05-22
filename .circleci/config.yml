@@ -12,8 +12,7 @@ jobs:
           name: Install dependencies
           command: pip install .[tests]
       - save_cache:
-          key:
-            - pip-deps-{{ checksum "setup.py" }}
+          key: pip-deps-{{ checksum "setup.py" }}
           paths:
             - /usr/local/lib/python3.6/site-packages
       - run:
@@ -32,8 +31,7 @@ jobs:
           name: Install dependencies
           command: pip install .[tests]
       - save_cache:
-          key:
-            - pip-deps-{{ checksum "setup.py" }}
+          key: pip-deps-{{ checksum "setup.py" }}
           paths:
             - /usr/local/lib/python3.6/site-packages
       - run:
