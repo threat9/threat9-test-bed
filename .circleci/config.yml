@@ -10,7 +10,7 @@ jobs:
             - pip-deps-{{ checksum "setup.py" }}
       - run:
           name: Install dependencies
-          command: pip install .[tests]
+          command: pip install --user .[tests]
       - save_cache:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
@@ -31,7 +31,7 @@ jobs:
             - pip-deps-{{ checksum "setup.py" }}
       - run:
           name: Install dependencies
-          command: pip install .[tests]
+          command: pip install --user .[tests]
       - save_cache:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
