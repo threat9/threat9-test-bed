@@ -21,9 +21,9 @@ jobs:
       - run:
           name: Lint
           command: |
-            flake8
-            isort --check-only --diff
-            unify --check-only --quote \" -r .
+            python -m flake8
+            python -m isort --check-only --diff
+            python -m unify --check-only --quote \" -r .
   test:
     docker:
       - image: python:3.6
@@ -41,7 +41,7 @@ jobs:
             - /usr/local/lib/python3.6/site-packages
       - run:
           name: Run tests
-          command: py.test -vv tests/
+          command: python -m py.test -vv tests/
 
 workflows:
   version: 2
