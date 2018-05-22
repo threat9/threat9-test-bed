@@ -2,7 +2,7 @@ version: 2
 jobs:
   lint:
     docker:
-      - image: circleci/python:3.6
+      - image: python:3.6
     steps:
       - checkout
       - restore_cache:
@@ -10,7 +10,7 @@ jobs:
             - pip-deps-{{ checksum "setup.py" }}
       - run:
           name: Install dependencies
-          command: pip install --user .[tests]
+          command: pip install .[tests]
       - save_cache:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
@@ -23,7 +23,7 @@ jobs:
             unify --check-only --quote \" -r .
   test:
     docker:
-      - image: circleci/python:3.6
+      - image: python:3.6
     steps:
       - checkout
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
             - pip-deps-{{ checksum "setup.py" }}
       - run:
           name: Install dependencies
-          command: pip install --user .[tests]
+          command: pip install .[tests]
       - save_cache:
           key: pip-deps-{{ checksum "setup.py" }}
           paths:
