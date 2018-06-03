@@ -32,7 +32,7 @@ setup(
     install_requires=[
         "click",
         "Faker",
-        "flask",
+        "flask>=1.0.0",
         "gunicorn",
         "pyopenssl",
         "requests",

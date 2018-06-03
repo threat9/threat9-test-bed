@@ -64,6 +64,7 @@ def redirect_():
 
 def timeout():
     time.sleep(60 * 60)
+    return found()
 
 
 def error():

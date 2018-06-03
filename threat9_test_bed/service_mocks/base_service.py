@@ -49,7 +49,7 @@ class BaseService:
         logger.debug(f"{self} has been terminated.")
 
     @staticmethod
-    def dib_port(port=0) -> (int, socket.socket):
+    def dib_port(port: int = 0) -> (int, socket.socket):
         socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         socket_.bind(("", port))
