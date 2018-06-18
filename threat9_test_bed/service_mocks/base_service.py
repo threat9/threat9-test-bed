@@ -6,6 +6,9 @@ logger = logging.getLogger(__name__)
 
 
 class BaseService:
+
+    socket_type = socket.SOCK_STREAM
+
     def __init__(self, host: str, port: int):
         self.host = host
         self.port, self.dibbed_port_socket = self.dib_port(port)
@@ -14,7 +17,7 @@ class BaseService:
         elapsed_time = 0
         start_time = time.time()
         while elapsed_time < 5:
-            s = socket.socket()
+            s = socket.socket(type=self.socket_type)
             s.settimeout(1)
             try:
                 s.connect((self.host, self.port))
