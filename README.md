@@ -1,4 +1,4 @@
-# thread9-test-bed
+# threat9-test-bed
 
 ## Installation
 ```bash

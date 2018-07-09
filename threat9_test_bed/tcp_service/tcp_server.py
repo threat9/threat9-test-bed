@@ -7,6 +7,7 @@ logger = getLogger(__name__)
 
 class TCPServer(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
+    daemon_threads = True
 
     def __init__(
             self,
@@ -27,6 +28,7 @@ class TCPServer(socketserver.ThreadingTCPServer):
 
 class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        data = self.request.recv(1024)
-        handler = self.server.handlers[data]
-        self.request.sendall(handler())
+        while True:
+            data = self.request.recv(1024)
+            handler = self.server.handlers.get(data, lambda: b"")
+            self.request.sendall(handler())
