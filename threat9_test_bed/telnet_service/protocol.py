@@ -78,13 +78,27 @@ class TelnetServerClientProtocol(asyncio.Protocol):
             self.transport.write(self.banner + b"\r\n")
         self.transport.write(b"Login: ")
 
+    def _get_handler(
+            self,
+            command: typing.Union[str, typing.Pattern[str]],
+    ) -> typing.Callable:
+
+        handler = self._command_mocks.get(command)
+        if handler:
+            return handler
+
+        for pattern_key in self._command_mocks:
+            if isinstance(pattern_key, typing.Pattern):
+                if pattern_key.match(command):
+                    return self._command_mocks[pattern_key]
+
+        return faker.paragraph
+
     @authorized
     def data_received(self, data: bytes):
         logger.debug(f"{self.remote_address} send: {data}")
         command = data.decode().strip()
-        handler = self._command_mocks.get(
-            command, lambda: faker.paragraph(variable_nb_sentences=True)
-        )
+        handler = self._get_handler(command)
         self.transport.write(
             f"{handler()}\r\n"f"{self.prompt}".encode()
         )

@@ -1,3 +1,4 @@
+import re
 from telnetlib import Telnet
 from unittest.mock import MagicMock
 import uuid
@@ -127,4 +128,34 @@ def test_telnet_service_mock_add_banner():
 
         _, match_object, foo = tn.expect([b"Login: ", b"login: "], 1.0)
         assert match_object, foo.decode()
+        tn.close()
+
+
+def test_telnet_service_mock_regexp_mock():
+    with TelnetServiceMock("127.0.0.1", 8023,
+                           scenario=TelnetScenario.GENERIC) as target:
+        assert target.host == "127.0.0.1"
+        assert target.port == 8023
+
+        mock = target.get_command_mock(re.compile("\d\dscoo\d\d"))
+        mock.return_value = "bee"
+        assert isinstance(mock, MagicMock)
+
+        tn = Telnet(target.host, target.port, timeout=1.0)
+
+        tn.expect([b"Login: ", b"login: "], 1.0)
+        tn.write(b"admin" + b"\r\n")
+
+        tn.expect([b"Password: ", b"password"], 1.0)
+        tn.write(b"admin" + b"\r\n")
+
+        tn.expect([b"admin@target:~\$"], 1.0)
+        tn.write(b"12scoo34" + b"\r\n")
+        _, match_object, _ = tn.expect([b"bee"], 1.0)
+        assert match_object
+
+        tn.write(b"56scoo78" + b"\r\n")
+        _, match_object, _ = tn.expect([b"bee"], 1.0)
+        assert match_object
+
         tn.close()

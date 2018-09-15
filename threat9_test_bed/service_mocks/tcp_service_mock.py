@@ -1,5 +1,6 @@
 from logging import getLogger
 import threading
+from typing import Pattern, Union
 from unittest import mock
 
 from ..tcp_service.tcp_server import TCPHandler, TCPServer
@@ -25,6 +26,9 @@ class TCPServiceMock(BaseService):
         self.server_thread.join()
         self.server.server_close()
 
-    def get_command_mock(self, command: bytes) -> mock.Mock:
+    def get_command_mock(
+            self,
+            command: Union[bytes, Pattern[bytes]],
+    ) -> mock.MagicMock:
         logger.debug(f"{self} mock for '{command}' has been added.")
         return self.server.get_command_mock(command)

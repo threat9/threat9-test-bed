@@ -1,6 +1,7 @@
 from logging import getLogger
 import socket
 import threading
+from typing import Pattern, Union
 from unittest import mock
 
 from ..udp_service.udp_server import UDPHandler, UDPServer
@@ -28,6 +29,9 @@ class UDPServiceMock(BaseService):
         self.server_thread.join()
         self.server.server_close()
 
-    def get_command_mock(self, command: bytes) -> mock.Mock:
+    def get_command_mock(
+            self,
+            command: Union[bytes, Pattern[bytes]],
+    ) -> mock.MagicMock:
         logger.debug(f"{self} mock for '{command}' has been added.")
         return self.server.get_command_mock(command)
