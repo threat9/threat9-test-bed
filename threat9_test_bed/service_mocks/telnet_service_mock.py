@@ -1,4 +1,5 @@
 import logging
+import re
 import threading
 import typing
 from unittest import mock
@@ -38,6 +39,13 @@ class TelnetServiceMock(BaseService):
         command_mock = mock.MagicMock(name=command)
         self.protocol.add_command_handler(command, command_mock)
         return command_mock
+
+    def get_command_mock_re(
+            self,
+            command: str,
+            **kwargs,
+    ):
+        return self.get_command_mock(re.compile(command, **kwargs))
 
     def add_credentials(self, login: str, password: str):
         """ Add custom credentials pair. """
